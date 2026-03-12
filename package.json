@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Live agent tool status in tmux window tabs with color-coded states",
   "bin": {
-    "tmux-agent-status": "./dist/cli.js",
-    "tmux-ai-status": "./dist/cli.js"
+    "tmux-agent-status": "dist/cli.js",
+    "tmux-ai-status": "dist/cli.js"
   },
   "files": [
     "dist/",

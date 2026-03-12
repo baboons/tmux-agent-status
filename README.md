@@ -1,4 +1,4 @@
-# tmux-ai-status
+# tmux-agent-status
 
 Live AI agent status in your tmux window tabs. See at a glance whether Claude Code, Codex, Copilot CLI, or Aider is thinking, writing, planning, or waiting — with color-coded icons right in the tab bar.
 
