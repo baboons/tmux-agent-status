@@ -38,13 +38,23 @@ extract_json_field() {
 
 # Refine "thinking" state based on JSON context from Claude Code
 if [ "$STATE" = "thinking" ] && [ -n "$STDIN_JSON" ]; then
-  PERMISSION_MODE=$(extract_json_field "permission_mode")
   TOOL_NAME=$(extract_json_field "tool_name")
+  PERMISSION_MODE=$(extract_json_field "permission_mode")
 
-  if [ "$PERMISSION_MODE" = "plan" ]; then
+  if echo "$TOOL_NAME" | grep -qE '^(ExitPlanMode|AskUserQuestion|EnterPlanMode)$'; then
+    STATE="deciding"
+  elif [ "$PERMISSION_MODE" = "plan" ]; then
     STATE="planning"
   elif echo "$TOOL_NAME" | grep -qE '^(Write|Edit|Bash|MultiEdit|NotebookEdit)$'; then
     STATE="writing"
+  fi
+fi
+
+# Don't let Stop overwrite a "deciding" state — user still needs to act
+if [ "$STATE" = "waiting" ] && [ -f "$STATE_FILE" ]; then
+  CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || true)
+  if [ "$CURRENT_STATE" = "deciding" ]; then
+    exit 0
   fi
 fi
 

@@ -13,8 +13,8 @@ import {
 function stripOurFormat(format: string): string {
   // Remove any #(...tab-status.sh...) calls we previously injected
   format = format.replace(/#\([^)]*tab-status\.sh[^)]*\)/g, '');
-  // Remove trailing #[default] that we add
-  format = format.replace(/#\[default\]$/, '');
+  // Remove trailing #[default] tags that we add (may have stacked from previous installs)
+  format = format.replace(/(#\[default\])+$/, '');
   return format;
 }
 

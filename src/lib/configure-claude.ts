@@ -64,6 +64,16 @@ export function run(): boolean {
       command: `${stateWriter} deciding`,
     },
     {
+      event: 'Notification',
+      matcher: 'elicitation_dialog',
+      command: `${stateWriter} deciding`,
+    },
+    {
+      event: 'PermissionRequest',
+      matcher: undefined,
+      command: `${stateWriter} deciding`,
+    },
+    {
       event: 'Stop',
       matcher: undefined,
       command: `${stateWriter} waiting`,
@@ -81,8 +91,14 @@ export function run(): boolean {
     );
 
     // Check if we already have this hook in new format (nested hooks array)
+    // Match on both state-writer.sh presence AND matcher to distinguish
+    // multiple hooks on the same event (e.g. Notification with different matchers)
+    const defMatcher = def.matcher || '';
     const existingEntry = settings.hooks[def.event].find(
-      (e) => e.hooks && e.hooks.some((h) => h.command && h.command.includes('state-writer.sh'))
+      (e) =>
+        e.hooks &&
+        e.hooks.some((h) => h.command && h.command.includes('state-writer.sh')) &&
+        (e.matcher || '') === defMatcher
     );
 
     if (existingEntry) {
